@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="ts">
-import { captureException } from '@sentry/vue'
 import BlockUI from 'primevue/blockui'
 import { computed, onMounted, watch } from 'vue'
 
@@ -47,15 +46,6 @@ const showContextMenu = (event: MouseEvent) => {
 
 function handleResourceError(url: string, tagName: string) {
   console.error('[resource:loadError]', { url, tagName })
-
-  if (__DISTRIBUTION__ === 'cloud') {
-    captureException(new Error(`Resource load failed: ${url}`), {
-      tags: {
-        error_type: 'resource_load_error',
-        tag_name: tagName
-      }
-    })
-  }
 }
 
 onMounted(() => {
@@ -76,22 +66,6 @@ onMounted(() => {
       chunkName: info.chunkName,
       message: info.message
     })
-    if (__DISTRIBUTION__ === 'cloud') {
-      captureException(event.payload, {
-        tags: {
-          error_type: 'vite_preload_error',
-          file_type: info.fileType,
-          chunk_name: info.chunkName ?? undefined
-        },
-        contexts: {
-          preload: {
-            url: info.url,
-            fileType: info.fileType,
-            chunkName: info.chunkName
-          }
-        }
-      })
-    }
     // Disabled: Third-party custom node extensions frequently trigger this toast
     // (e.g., bare "vue" imports, wrong relative paths to scripts/app.js, missing
     // core dependencies). These are plugin bugs, not ComfyUI core failures, but

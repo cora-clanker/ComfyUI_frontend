@@ -1,7 +1,7 @@
 ---
 # Dispatches a frontend-asset-build event to the cloud repo on push to
 # cloud/* branches and main. The cloud repo handles the actual build,
-# GCS upload, and secret management (Sentry, Algolia, GCS creds).
+# GCS upload, and secret management (Algolia, GCS creds).
 #
 # This is fire-and-forget — it does NOT wait for the cloud workflow to
 # complete. Status is visible in the cloud repo's Actions tab.

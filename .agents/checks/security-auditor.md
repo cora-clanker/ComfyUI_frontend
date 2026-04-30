@@ -30,5 +30,5 @@ Rules:
 
 - HTML sanitization must use `DOMPurify.sanitize()` — flag any `v-html` or `innerHTML` without DOMPurify
 - API calls should use `api.get(api.apiURL(...))` helpers, not raw `fetch('/api/...')` — direct URL construction can bypass auth
-- Firebase/Sentry credentials are configured via environment — flag any hardcoded Firebase config objects
+- Firebase credentials are configured via environment — flag any hardcoded Firebase config objects
 - Electron IPC: check for unsafe `ipcRenderer.send` patterns in desktop code paths
