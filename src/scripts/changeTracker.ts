@@ -1,9 +1,7 @@
-import * as Sentry from '@sentry/vue'
 import _ from 'es-toolkit/compat'
 
 import type { CanvasPointerEvent } from '@/lib/litegraph/src/litegraph'
 import { LGraphCanvas, LiteGraph } from '@/lib/litegraph/src/litegraph'
-import { isDesktop } from '@/platform/distribution/types'
 import type { ComfyWorkflow } from '@/platform/workflow/management/stores/workflowStore'
 import { useWorkflowStore } from '@/platform/workflow/management/stores/workflowStore'
 import type { ComfyWorkflowJSON } from '@/platform/workflow/validation/schemas/workflowSchema'
@@ -39,16 +37,6 @@ function reportInactiveTrackerCall(method: string, workflowPath: string) {
   reportedInactiveCalls.add(key)
 
   console.warn(`${method}() called on inactive tracker for: ${workflowPath}`)
-
-  if (isDesktop) {
-    Sentry.captureMessage(
-      `ChangeTracker.${method}() called on inactive tracker`,
-      {
-        level: 'warning',
-        tags: { workflow: workflowPath }
-      }
-    )
-  }
 }
 
 export class ChangeTracker {

@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/vue'
 import type { PromotedWidgetSource } from '@/core/graph/subgraph/promotedWidgetTypes'
 import { isPromotedWidgetView } from '@/core/graph/subgraph/promotedWidgetTypes'
 import { t } from '@/i18n'
@@ -104,11 +103,6 @@ export function promoteWidget(
     store.promote(parent.rootGraph.id, parent.id, source)
   }
   refreshPromotedWidgetRendering(parents)
-  Sentry.addBreadcrumb({
-    category: 'subgraph',
-    message: `Promoted widget "${source.sourceWidgetName}" on node ${node.id}`,
-    level: 'info'
-  })
 }
 
 export function demoteWidget(
@@ -122,11 +116,6 @@ export function demoteWidget(
     store.demote(parent.rootGraph.id, parent.id, source)
   }
   refreshPromotedWidgetRendering(parents)
-  Sentry.addBreadcrumb({
-    category: 'subgraph',
-    message: `Demoted widget "${source.sourceWidgetName}" on node ${node.id}`,
-    level: 'info'
-  })
 }
 
 function getParentNodes(): SubgraphNode[] {
@@ -352,11 +341,6 @@ export function pruneDisconnected(subgraphNode: SubgraphNode) {
 
   store.setPromotions(subgraphNode.rootGraph.id, subgraphNode.id, validEntries)
   refreshPromotedWidgetRendering([subgraphNode])
-  Sentry.addBreadcrumb({
-    category: 'subgraph',
-    message: `Pruned ${removedEntries.length} disconnected promotion(s) from subgraph node ${subgraphNode.id}`,
-    level: 'info'
-  })
 }
 
 export function hasUnpromotedWidgets(subgraphNode: SubgraphNode): boolean {

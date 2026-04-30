@@ -1,4 +1,3 @@
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { execSync } from 'child_process'
@@ -423,40 +422,6 @@ export default defineConfig({
             template: 'treemap' // or 'sunburst', 'network'
           })
         ]
-      : []),
-
-    // Sentry sourcemap upload plugin
-    // Uploads sourcemaps to both staging and prod Sentry projects so that
-    // error stack traces are readable in both environments.
-    ...(DISTRIBUTION === 'cloud' &&
-    process.env.SENTRY_AUTH_TOKEN &&
-    process.env.SENTRY_ORG &&
-    process.env.SENTRY_PROJECT &&
-    !IS_DEV
-      ? [
-          sentryVitePlugin({
-            org: process.env.SENTRY_ORG,
-            project: process.env.SENTRY_PROJECT,
-            authToken: process.env.SENTRY_AUTH_TOKEN,
-            sourcemaps: {
-              filesToDeleteAfterUpload: process.env.SENTRY_PROJECT_PROD
-                ? []
-                : ['**/*.map']
-            }
-          }),
-          ...(process.env.SENTRY_PROJECT_PROD
-            ? [
-                sentryVitePlugin({
-                  org: process.env.SENTRY_ORG,
-                  project: process.env.SENTRY_PROJECT_PROD,
-                  authToken: process.env.SENTRY_AUTH_TOKEN,
-                  sourcemaps: {
-                    filesToDeleteAfterUpload: ['**/*.map']
-                  }
-                })
-              ]
-            : [])
-        ]
       : [])
   ],
 
@@ -526,11 +491,6 @@ export default defineConfig({
             {
               name: 'vendor-firebase',
               test: /[\\/]node_modules[\\/](@?firebase|@firebase)[\\/]/,
-              priority: 15
-            },
-            {
-              name: 'vendor-sentry',
-              test: /[\\/]node_modules[\\/]@sentry[\\/]/,
               priority: 15
             },
 
@@ -618,10 +578,6 @@ export default defineConfig({
       process.env.npm_package_version
     ),
     __COMFYUI_FRONTEND_COMMIT__: JSON.stringify(GIT_COMMIT),
-    __SENTRY_ENABLED__: JSON.stringify(
-      !(process.env.NODE_ENV === 'development' || !process.env.SENTRY_DSN)
-    ),
-    __SENTRY_DSN__: JSON.stringify(process.env.SENTRY_DSN || ''),
     __ALGOLIA_APP_ID__: JSON.stringify(process.env.ALGOLIA_APP_ID || ''),
     __ALGOLIA_API_KEY__: JSON.stringify(process.env.ALGOLIA_API_KEY || ''),
     __USE_PROD_CONFIG__: process.env.USE_PROD_CONFIG === 'true',
